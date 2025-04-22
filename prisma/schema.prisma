@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+  
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id                     String    @id @default(cuid())
+  name                   String?
+  email                  String    @unique
+  password               String?
+  image                  String?
+  role                   UserRole  @default(USER)
+  isVerified             Boolean   @default(false)
+  emailVerified          DateTime?
+  verificationToken      String?
+  verificationTokenExpires DateTime?  
+  passwordResetToken     String?
+  passwordResetExpires   DateTime?
+
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  posts         Post[]
+  comments      Comment[]
+  accounts      Account[]
+  sessions      Session[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  excerpt     String?
+  content     String     @db.Text
+  coverImage  String?
+  publishedAt DateTime   @default(now()) @map("published_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  published   Boolean    @default(false)
+  featured    Boolean    @default(false)
+  authorId    String     @map("author_id")
+  author      User       @relation(fields: [authorId], references: [id])
+  categories  Category[]
+  tags        Tag[]
+  comments    Comment[]
+
+  @@map("posts")
+}
+
+model Category {
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  posts Post[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  posts Post[]
+
+  @@map("tags")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model Settings {
+  id                    String   @id @default(cuid())
+  siteTitle             String   @default("Junayed Ahmed's Blog")
+  siteDescription       String   @default("Personal blog of Junayed Ahmed, sharing thoughts on travel, politics, religion, history, and nature.")
+  siteUrl               String   @default("https://junayedahmed.com")
+  commentsEnabled       Boolean  @default(true)
+  primaryColor          String   @default("#F59E0B")
+  secondaryColor        String   @default("#78716C")
+  darkModeDefault       Boolean  @default(false)
+  fromEmail             String   @default("noreply@junayedahmed.com")
+  adminEmail            String   @default("admin@junayedahmed.com")
+  newCommentNotification Boolean  @default(true)
+  newUserNotification   Boolean  @default(true)
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  status    String   @default("unread") // unread, read
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("contacts")
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  status    String   @default("active") // active, unsubscribed
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("subscribers")
+}
