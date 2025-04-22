@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2, Mail, ArrowLeft } from "lucide-react"
 import { requestPasswordReset } from "@/lib/actions/auth-actions"
+import { useToast } from "@/components/ui/use-toast"
 
 // Define the form schema with Zod
 const forgotPasswordSchema = z.object({
@@ -23,6 +24,8 @@ type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
 export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const { toast } = useToast()
+  
 
   // Initialize react-hook-form
   const form = useForm<ForgotPasswordFormValues>({
@@ -38,16 +41,22 @@ export default function ForgotPasswordPage() {
     try {
       const result = await requestPasswordReset(data.email)
 
-      if (result.error) {
-        toast.error(result.error || "Failed to send reset email")
+      if (!result.success) {
+        toast({
+          title: "Reset password failed",
+          description: result.message || "Failed to reset password. Please try again.",
+          variant: "destructive",
+        })
         return
       }
-
       setIsSubmitted(true)
-      toast.success("If an account exists with this email, you will receive a password reset link")
     } catch (error) {
       console.error("Password reset error:", error)
-      toast.error("Failed to send reset email. Please try again.")
+      toast({
+        title: "Reset password failed",
+        description: "Failed to reset password. Please try again.",
+        variant: "destructive",
+      }) 
     } finally {
       setIsLoading(false)
     }
