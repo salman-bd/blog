@@ -149,7 +149,7 @@ export function ContactsTab() {
 
   const handleOpenReplyDialog = (contact: any) => {
     setCurrentContact(contact)
-    replyForm.setValue("subject", `Re: ${contact.subject}`)
+    replyForm.setValue("subject", `${contact.subject}`)
     setIsReplyDialogOpen(true)
   }
 

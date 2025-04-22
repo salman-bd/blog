@@ -16,10 +16,8 @@ import { useToast } from "@/components/ui/use-toast"
 
 
 
-export default function ResetPasswordPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const token = searchParams.get("token")
+export default function ResetPasswordPage({ searchParams }: { searchParams: { token?: string } }) {
+  const token = searchParams.token
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const { toast } = useToast()

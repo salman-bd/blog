@@ -17,10 +17,10 @@ import { SignInFormValues, signInSchema } from "@/lib/validations"
 import { useToast } from "@/components/ui/use-toast"
 
 
-export default function SignInPage() {
+export default function SignInPage({ searchParams }: { searchParams: { callbackUrl?: string } }) {
+  const callbackUrl = searchParams.callbackUrl
+
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || "/"
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
@@ -60,7 +60,7 @@ export default function SignInPage() {
           variant: "default"
         })
         router.refresh()
-        router.push(`/${callbackUrl}`)
+        router.push(`${callbackUrl}`)
     } catch (error) {
       toast({
         title: "Error",
@@ -77,10 +77,10 @@ export default function SignInPage() {
       setSocialLoading(provider)
       await signIn(provider, { callbackUrl })
     } catch (error) {
-      console.error(`${provider} login error:`, error)
+      console.error(`${provider} sign in error:`, error)
       toast({
         title: "Error",
-        description: "SAn error occurred with ${provider} login. Please try again.",
+        description: "An error occurred with ${provider} sign in. Please try again.",
         variant: "destructive",
       })
       setSocialLoading(null)
