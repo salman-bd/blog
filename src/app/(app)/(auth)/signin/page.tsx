@@ -57,6 +57,7 @@ export default function SignInPage() {
         toast({
           title: "Success",
           description: "You have been signed in",
+          variant: "default"
         })
         router.refresh()
         router.push(`/${callbackUrl}`)

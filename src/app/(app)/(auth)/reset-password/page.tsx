@@ -5,27 +5,16 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2, CheckCircle } from "lucide-react"
 import { resetPassword } from "@/lib/actions/auth-actions"
+import { ResetPasswordFormValues, resetPasswordSchema } from "@/lib/validations"
+import { useToast } from "@/components/ui/use-toast"
 
-// Define the form schema with Zod
-const resetPasswordSchema = z
-  .object({
-    password: z.string().min(8, { message: "Password must be at least 8 characters" }),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  })
 
-type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>
 
 export default function ResetPasswordPage() {
   const router = useRouter()
@@ -33,6 +22,8 @@ export default function ResetPasswordPage() {
   const token = searchParams.get("token")
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const { toast } = useToast()
+  
 
   // Initialize react-hook-form
   const form = useForm<ResetPasswordFormValues>({
@@ -45,25 +36,33 @@ export default function ResetPasswordPage() {
 
   async function onSubmit(data: ResetPasswordFormValues) {
     if (!token) {
-      toast.error("Invalid reset token")
+      toast({
+        title: "Invalid reset token",
+        description: "Invalid reset token. Please try again.",
+        variant: "destructive",
+      })
       return
     }
-
     setIsLoading(true)
-
     try {
       const result = await resetPassword(token, data.password)
 
-      if (result.error) {
-        toast.error(result.error || "Failed to reset password")
+      if (!result.success) {
+        toast({
+          title: "Reset password failed",
+          description: result.message || "Failed to reset password. Please try again.",
+          variant: "destructive",
+        })
         return
       }
-
       setIsSubmitted(true)
-      toast.success("Password reset successfully")
     } catch (error) {
       console.error("Password reset error:", error)
-      toast.error("Failed to reset password. Please try again.")
+      toast({
+        title: "Reset password failed",
+        description: "Failed to reset password. Please try again.",
+        variant: "destructive",
+      })    
     } finally {
       setIsLoading(false)
     }
