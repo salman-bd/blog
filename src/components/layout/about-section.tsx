@@ -8,7 +8,7 @@ export function AboutSection() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
           <div className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden order-2 md:order-1">
-            <Image src="/junayed.jpg?height=400&width=600" alt="Junayed Ahmed" fill className="object-cover" />
+            <Image src="/blogger1.jpg?height=400&width=600" alt="Junayed Ahmed" fill className="object-cover" />
           </div>
           <div className="space-y-6 order-1 md:order-2">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">

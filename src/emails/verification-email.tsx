@@ -10,10 +10,10 @@ export function VerificationEmail({ verificationUrl }: VerificationEmailProps) {
     <Tailwind>
       <Html>
         <Head />
-        <Preview>Verify your email address for Junayed Ahmed's Blog</Preview>
+        <Preview>Verify your email address for Blogger's Blog</Preview>
         <Body className="bg-stone-50 font-sans">
           <Container className="bg-white p-8 rounded-lg shadow-sm my-8 mx-auto max-w-md">
-            <Heading className="text-2xl font-bold text-amber-600 text-center mb-4">Junayed Ahmed's Blog</Heading>
+            <Heading className="text-2xl font-bold text-amber-600 text-center mb-4">Blogger's Blog</Heading>
             <Text className="text-stone-600 mb-4">
               Thanks for signing up! Please verify your email address to complete your registration.
             </Text>
@@ -27,7 +27,7 @@ export function VerificationEmail({ verificationUrl }: VerificationEmailProps) {
             </Text>
             <Hr className="border-stone-200 my-4" />
             <Text className="text-stone-400 text-xs text-center">
-              &copy; {new Date().getFullYear()} Junayed Ahmed's Blog. All rights reserved.
+              &copy; {new Date().getFullYear()} Blogger's Blog. All rights reserved.
             </Text>
           </Container>
         </Body>

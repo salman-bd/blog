@@ -45,3 +45,9 @@ export interface Comment {
     image?: string
   }
 }
+
+export interface AppAppearanceSettings {
+  primaryColor: string
+  secondaryColor: string
+  darkModeDefault: boolean
+}

@@ -16,7 +16,7 @@ export async function sendVerificationEmail(email: string, token: string) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "Junayed Ahmed <verification@cscsylhet.com>",
+      from: "Blogger <verification@cscsylhet.com>",
       to: email,
       subject: "Verify your email address",
       react: VerificationEmail({ verificationUrl }),
@@ -38,7 +38,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "Junayed Ahmed <reset-password@cscsylhet.com>",
+      from: "Blogger <reset-password@cscsylhet.com>",
       to: email,
       subject: "Reset your password",
       react: ResetPasswordEmail({ resetUrl }),
@@ -58,9 +58,9 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 export async function sendWelcomeEmail(email: string, name: string) {
   try {
     const { data, error } = await resend.emails.send({
-      from: "Junayed Ahmed <welcome@cscsylhet.com>",
+      from: "Blogger <welcome@cscsylhet.com>",
       to: email,
-      subject: "Welcome to Junayed Ahmed's Blog",
+      subject: "Welcome to Blogger's Blog",
       react: WelcomeEmail({ name }),
     })
 
@@ -78,7 +78,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
 export async function sendContactConfirmationEmail(email: string, name: string, subject: string) {
   try {
     const { data, error } = await resend.emails.send({
-      from: "Junayed Ahmed <contact-confirmation@cscsylhet.com>",
+      from: "Blogger <contact-confirmation@cscsylhet.com>",
       to: email,
       subject: "We've received your message",
       react: ContactConfirmationEmail({ name, subject }),
@@ -100,7 +100,7 @@ export async function sendAdminNotificationEmail(name: string, email: string, su
     const adminEmail = process.env.ADMIN_EMAIL || "admin@cscsylhet.com"
 
     const { data, error } = await resend.emails.send({
-      from: "Junayed Ahmed Blog <admin-notification@cscsylhet.com>",
+      from: "Blogger Blog <admin-notification@cscsylhet.com>",
       to: adminEmail,
       subject: `New Contact Form Submission: ${subject}`,
       react: AdminNotificationEmail({ name, email, subject, message }),
@@ -122,9 +122,9 @@ export async function sendSubscriptionConfirmationEmail(email: string) {
     const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL}/unsubscribe?email=${encodeURIComponent(email)}&token=placeholder-token`
 
     const { data, error } = await resend.emails.send({
-      from: "Junayed Ahmed <subscription-confirm@cscsylhet.com>",
+      from: "Blogger <subscription-confirm@cscsylhet.com>",
       to: email,
-      subject: "Welcome to Junayed Ahmed's Newsletter",
+      subject: "Welcome to Blogger's Newsletter",
       react: SubscriptionConfirmationEmail({ email, unsubscribeUrl }),
     })
 
@@ -143,7 +143,7 @@ export async function sendSubscriptionConfirmationEmail(email: string) {
 export async function sendContactReplyEmail(email: string, name: string, userEmailSubject: string, userEmailMessage: string, subject: string, message: string) {
   try {
     const { data, error } = await resend.emails.send({
-      from: "Junayed Ahmed <contact-replay@cscsylhet.com>",
+      from: "Blogger <contact-replay@cscsylhet.com>",
       to: email,
       subject: subject,
       react: ContactReplyEmail({ name, userEmailSubject, userEmailMessage, message }),

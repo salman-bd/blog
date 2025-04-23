@@ -10,13 +10,13 @@ export function WelcomeEmail({ name }: WelcomeEmailProps) {
     <Tailwind>
       <Html>
         <Head />
-        <Preview>Welcome to Junayed Ahmed's Blog</Preview>
+        <Preview>Welcome to Blogger's Blog</Preview>
         <Body className="bg-stone-50 font-sans">
           <Container className="bg-white p-8 rounded-lg shadow-sm my-8 mx-auto max-w-md">
-            <Heading className="text-2xl font-bold text-amber-600 text-center mb-4">Junayed Ahmed's Blog</Heading>
+            <Heading className="text-2xl font-bold text-amber-600 text-center mb-4">Blogger's Blog</Heading>
             <Text className="text-stone-600 mb-4">Hi {name},</Text>
             <Text className="text-stone-600 mb-4">
-              Welcome to Junayed Ahmed's Blog! I'm excited to have you join our community.
+              Welcome to Blogger's Blog! I'm excited to have you join our community.
             </Text>
             <Text className="text-stone-600 mb-4">
               On this blog, I share my thoughts and experiences on travel, politics, religion, history, and nature. I
@@ -36,11 +36,11 @@ export function WelcomeEmail({ name }: WelcomeEmailProps) {
             <Text className="text-stone-600 mb-4">
               Best regards,
               <br />
-              Junayed Ahmed
+              Blogger
             </Text>
             <Hr className="border-stone-200 my-4" />
             <Text className="text-stone-400 text-xs text-center">
-              &copy; {new Date().getFullYear()} Junayed Ahmed's Blog. All rights reserved.
+              &copy; {new Date().getFullYear()} Blogger's Blog. All rights reserved.
             </Text>
           </Container>
         </Body>

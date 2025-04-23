@@ -38,7 +38,7 @@ export function AdminNotificationEmail({ name, email, subject, message }: AdminN
             <Text className="text-stone-600 mb-4">Please respond to this inquiry at your earliest convenience.</Text>
             <Hr className="border-stone-200 my-4" />
             <Text className="text-stone-400 text-xs text-center">
-              &copy; {new Date().getFullYear()} Junayed Ahmed's Blog. All rights reserved.
+              &copy; {new Date().getFullYear()} Blogger's Blog. All rights reserved.
             </Text>
           </Container>
         </Body>

@@ -1,15 +1,16 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
+import { sriracha } from "@/components/ui/font"
 
 export function HeroSection() {
   return (
     <section className="py-12 md:py-20 ">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
         <div className="space-y-6">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-            <span className="block text-amber-600">Welcome to My Blog</span>
-            <span className="block">Exploring Life's Journey</span>
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl space-y-4">
+            <span className={`block ${sriracha.className} text-amber-600`}>Welcome to My Blog</span>
+            <span className={`block ${sriracha.className}`}>Exploring Life's Journey</span>  
           </h1>
           <p className="text-lg text-stone-600 dark:text-stone-400 max-w-prose">
             Join me as I share my experiences and thoughts on travel, politics, religion, history, and the beauty of
@@ -31,7 +32,7 @@ export function HeroSection() {
         </div>
         <div className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden">
           <Image
-            src="/junayed2.jpg?height=400&width=600"
+            src="/blogger2.jpg?height=400&width=600"
             alt="Junayed Ahmed"
             fill
             className="object-cover"

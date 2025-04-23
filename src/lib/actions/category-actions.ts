@@ -33,7 +33,7 @@ export async function getCategories() {
       },
     })
 
-    return categories.map((category: Category) => ({
+    return categories.map((category) => ({
       id: category.id,
       name: category.name,
       slug: category.slug,

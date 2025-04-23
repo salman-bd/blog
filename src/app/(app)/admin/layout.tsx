@@ -9,12 +9,13 @@ export default async function AdminLayout({
   children: React.ReactNode
 }) {
   const user = await getCurrentUser()
-  if (!user) {
-    redirect("/signin?callbackUrl=/admin")
+
+  if (!user || user.role !== "ADMIN") {
+    redirect("/admin-signin?callbackUrl=/admin")
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 w-full flex-1">
+    <div className="min-h-screen  dark:bg-stone-700 bg-gray-100 w-full flex-1">
       <div className="flex items-center justify-center mx-auto w-full">{children}</div>
     </div>
   )

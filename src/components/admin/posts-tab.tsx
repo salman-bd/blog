@@ -23,7 +23,7 @@ import {
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Edit, MoreHorizontal, Plus, Search, Trash, Loader2, AlertCircle } from "lucide-react"
+import { Edit, MoreHorizontal, Plus, Search, Trash, Loader2, AlertCircle, Upload } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 import { useDebouncedCallback } from "use-debounce"
@@ -34,6 +34,8 @@ import { MultiSelect } from "@/components/ui/multi-select"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "../ui/use-toast"
 import { PostFormValues, postSchema } from "@/lib/validations"
+import Image from "next/image"
+import axios from "axios"
 
 
 export function PostsTab() {
@@ -41,6 +43,8 @@ export function PostsTab() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [imageUploading, setImageUploading] = useState(false)
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isPostDialogOpen, setIsPostDialogOpen] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -231,6 +235,7 @@ export function PostsTab() {
         toast({
           title: "Success",
           description: result.message,
+          variant: "default"
         })
 
         // Refresh posts data
@@ -263,6 +268,54 @@ export function PostsTab() {
     value: category.name,
     label: category.name,
   }))
+
+  // Handle image upload
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+    if (file.size > MAX_FILE_SIZE) {
+      toast({
+        title: "Exceeds image size",
+        description: "File size exceeds 5MB. Please choose a smaller file",
+        variant: "destructive",
+      })
+      return
+    }
+    const formData = new FormData()
+    formData.append("file", file)
+    try {
+      setImageUploading(true)
+      const response = await axios.post("/api/image-upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      if (!response.data.success) {
+        toast({
+          title: "Image Uploading Failed",
+          description: response.data.message,
+          variant: "destructive",
+        })
+        throw new Error(response.data.message || "Failed to add the image")
+      }
+      form.setValue("coverImage", response.data.url)
+      toast({
+        title: "Image uploaded",
+        description: "The image has been uploaded successfully!",
+        variant: "default",
+      })
+    } catch (error) {
+      console.error("Error uploading image:", error)
+      toast({
+        title: "Image uploading failed",
+        description: "Something went wrong uploading image",
+        variant: "destructive",
+      })
+    } finally {
+      setImageUploading(false)
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -329,7 +382,7 @@ export function PostsTab() {
                         {post.title}
                       </Link>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="flex flex-col justify-start items-center gap-2">
                       <Badge
                         variant={post.published ? "default" : "outline"}
                         className={
@@ -449,11 +502,46 @@ export function PostsTab() {
                 name="coverImage"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Cover Image URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://example.com/image.jpg" {...field} />
-                    </FormControl>
-                    <FormDescription>URL to the main image for this post.</FormDescription>
+                    <FormLabel>Featured Image</FormLabel>
+                    <div className="space-y-4">
+                      {field.value && (
+                        <div className="relative w-full max-w-md h-48 rounded-md overflow-hidden border mx-auto">
+                          <Image
+                            src={field.value || "/placeholder.svg"}
+                            fill
+                            alt="article-image"
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="flex items-center gap-4">
+                        <FormControl>
+                          <Input type="text" placeholder="Image URL" {...field} className="hidden" />
+                        </FormControl>
+                        <div className="relative">
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="absolute inset-0 opacity-0 cursor-pointer"
+                          />
+                          <Button type="button" variant="outline">
+                            {imageUploading ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin text-amber-600" />
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="mr-2 h-4 w-4" />
+                                Upload Image
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    <FormDescription>Upload an image for your article (max 5MB, JPG, PNG or WebP)</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

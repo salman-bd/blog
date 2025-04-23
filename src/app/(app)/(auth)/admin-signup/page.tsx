@@ -10,9 +10,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/components/ui/use-toast"
 import { Loader2, Mail } from "lucide-react"
 import { signIn } from "next-auth/react"
-import { SignUpFormValues, signUpSchema } from "@/lib/validations"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { signUp } from "@/lib/actions/auth-actions"
+import { AdminSignUpFormValues, adminSignUpSchema } from "@/lib/validations"
+import { adminSignUp } from "@/lib/actions/auth-actions"
 
 
 export default function SignUpPage() {
@@ -20,22 +20,23 @@ export default function SignUpPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const { toast } = useToast()
 
-  const form = useForm<SignUpFormValues>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<AdminSignUpFormValues>({
+    resolver: zodResolver(adminSignUpSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
       confirmPassword: "",
+      secretCode: "",
     },
   })
 
 
 
-  const onSubmit = async (data: SignUpFormValues) => {
+  const onSubmit = async (data: AdminSignUpFormValues) => {
     setIsLoading(true)
     try {
-      const result = await signUp(data, 'USER')
+      const result = await adminSignUp(data, 'ADMIN')
       if (!result.success) {
         toast({
           title: "Registration failed",
@@ -120,6 +121,19 @@ export default function SignUpPage() {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="secretCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Secret Code</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="Enter admin registration secret code" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <Button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white" disabled={isLoading}>
                   {isLoading ? (
                     <>
@@ -169,7 +183,7 @@ export default function SignUpPage() {
         <CardFooter className="flex justify-center">
           <p className="text-sm text-[#8e8e8e]">
             Already have an account?{" "}
-            <Link href="/signin" className="text-[#fc8a06] hover:underline">
+            <Link href="/admin-signin" className="text-[#fc8a06] hover:underline">
               Sign in
             </Link>
           </p>

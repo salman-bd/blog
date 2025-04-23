@@ -36,7 +36,7 @@ export default function ContactReplyEmail({ name, userEmailSubject, userEmailMes
                 If you have any further questions, please don't hesitate to contact us again.
               </Text>
               <Text className="text-stone-600 text-sm">Best regards,</Text>
-              <Text className="text-stone-700 font-medium">The Junayed Ahmed Blog Team</Text>
+              <Text className="text-stone-700 font-medium">The Blogger Blog Team</Text>
             </Section>
           </Container>
         </Body>

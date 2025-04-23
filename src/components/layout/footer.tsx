@@ -13,7 +13,7 @@ export async function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div>
             <Link href="/" className="inline-block">
-              <span className="text-xl font-bold text-amber-600">Junayed Ahmed</span>
+              <span className="text-xl font-bold text-amber-600">Blogger</span>
             </Link>
             <p className="mt-4 text-sm text-stone-600 dark:text-stone-400">
               A government employee in Bangladesh with a passion for traveling and exploring new places.
@@ -79,14 +79,19 @@ export async function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-stone-600 dark:text-stone-400">
-            &copy; {new Date().getFullYear()} Junayed Ahmed. All rights reserved.
-          </p>
+          <div className="flex items-center justify-center gap-4">
+            <p className="text-sm text-stone-600 dark:text-stone-400">
+              &copy; {new Date().getFullYear()} Blogger. All rights reserved.
+            </p>
+            <p className="text-sm text-stone-600 dark:text-stone-400">
+              Developed by: <Link href={'/salmanbd.com'}><strong><span className="hover:text-stone-500">Md. Abu Salman</span></strong> </Link> 
+            </p>
+          </div>
           <Link
             href="/admin"
             className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 mt-4 md:mt-0"
           >
-            Admin Login
+            Admin
           </Link>
         </div>
       </div>

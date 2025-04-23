@@ -78,9 +78,9 @@ export default function AboutPage() {
           <Card>
             <CardContent className="p-6">
               <div className="relative h-80 w-full mb-4 rounded-md overflow-hidden">
-                <Image src="/junayed.jpg?height=320&width=240" alt="Junayed Ahmed" fill className="object-cover" />
+                <Image src="/blogger3.jpg?height=320&width=240" alt="Junayed Ahmed" fill className="object-cover" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Junayed Ahmed</h3>
+              <h3 className="text-xl font-bold mb-2">Blogger</h3>
               <p className="text-stone-600 dark:text-stone-400 mb-4">
                 Government Employee | Travel Enthusiast | Writer
               </p>

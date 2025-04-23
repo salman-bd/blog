@@ -13,6 +13,19 @@ export const signUpSchema = z
     path: ["confirmPassword"],
   })
 
+export const adminSignUpSchema = z
+  .object({
+    name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z.string().min(8, { message: "Password must be at least 8 characters" }),
+    confirmPassword: z.string(),
+    secretCode: z.string().min(4, { message: "Secret code must be at least 4 characters."}),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  })
+
 export const signInSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z.string().min(1, { message: "Password is required" }),
@@ -130,6 +143,7 @@ export const emailSettingsSchema = z.object({
 
 // Export types
 export type SignUpFormValues = z.infer<typeof signUpSchema>
+export type AdminSignUpFormValues = z.infer<typeof adminSignUpSchema>
 export type SignInFormValues = z.infer<typeof signInSchema>
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>

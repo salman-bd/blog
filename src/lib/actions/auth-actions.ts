@@ -1,11 +1,12 @@
 "use server"
 import { compare, hash } from "bcryptjs"
 import { prisma } from "@/lib/db"
-import { SignUpFormValues, signUpSchema } from "../validations"
+import { AdminSignUpFormValues, adminSignUpSchema, SignUpFormValues, signUpSchema } from "../validations"
 import { sendPasswordResetEmail, sendVerificationEmail } from "../sendEmail"
 import { generatePasswordResetToken, generateVerificationToken } from "../tokens"
 import { UserRole } from "@prisma/client"
 
+const ADMIN_SECRET_CODE='ADMIN123'
 
 export async function signUp(data: SignUpFormValues, role: UserRole) {  
   try {  
@@ -17,6 +18,132 @@ export async function signUp(data: SignUpFormValues, role: UserRole) {
       email,  
       password,  
       confirmPassword,  
+    });  
+
+    if (!validationResult.success) {  
+      return {  
+        success: false,  
+        message: "Invalid form data. Please check your inputs.",  
+        errors: validationResult.error.flatten().fieldErrors,  
+      };  
+    }  
+
+    // Check if user already exists  
+    const existingUser = await prisma.user.findUnique({  
+      where: {  
+        email,  
+      },  
+    });  
+
+    // Generate verification code  
+    const verificationToken = await generateVerificationToken();  
+    const verificationTokenExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour  
+
+    if (existingUser) {  
+      if (existingUser.isVerified) {  
+        return {  
+          success: false,  
+          message: "User with this email already exists. Go for signin",  
+        };  
+      }  
+      
+      // Update existing unverified user  
+      const hashedPassword = await hash(password, 10);  
+      await prisma.user.update({  
+        where: {  
+          id: existingUser.id,  
+        },  
+        data: {  
+          name,  
+          password: hashedPassword,  
+          verificationToken,  
+          verificationTokenExpires,  
+        },  
+      });  
+      
+      // Update associated Account entry for existing user or create it  
+      await prisma.account.upsert({  
+        where: {  
+          provider_providerAccountId: { // Use the composite unique constraint  
+            provider: 'credentials', // This is the provider type  
+            providerAccountId: existingUser.id, // Assuming this is unique for the user  
+          },  
+        },  
+        create: {  
+          userId: existingUser.id,  
+          type: 'credentials',  
+          provider: 'credentials',  
+          providerAccountId: existingUser.id, // This could be a unique identifier for the user  
+          // Include default values for other optional fields if needed  
+        },  
+        update: {  
+          // Include any updates necessary here, update tokens or other fields as needed  
+          refresh_token: 'newRefreshToken', // Example of field to update  
+          access_token: 'newAccessToken',  
+          // You can also include other fields that may need updating  
+        },  
+      });   
+    } else {  
+      // Hash password  
+      const hashedPassword = await hash(password, 10);  
+      // Create user  
+      const user = await prisma.user.create({  
+        data: {  
+          name,  
+          email,  
+          password: hashedPassword,  
+          role,  
+          verificationToken,  
+          verificationTokenExpires,  
+        },  
+      });  
+      // Create associated account for the new user  
+      await prisma.account.create({  
+        data: {  
+          userId: user.id,  
+          type: 'credentials',  
+          provider: 'credentials',  
+          providerAccountId: user.id, // Use user ID as providerAccountId  
+        },  
+      });  
+    }  
+    // Send verification email  
+    const emailResult = await sendVerificationEmail(email, verificationToken);  
+    if (!emailResult.success) {  
+      console.error("Failed to send verification email:", emailResult.error);  
+      // Continue with registration even if email fails  
+    }  
+    return {  
+      success: true,  
+      message: "Registration successful! Please check your email for the verification code.",  
+      email,  
+    };  
+
+  } catch (error) {  
+    console.error("Registration error:", error);  
+    return {  
+      success: false,  
+      message: "An error occurred during registration. Please try again.",  
+    };  
+  }  
+}  
+
+
+export async function adminSignUp(data: AdminSignUpFormValues, role: UserRole) {  
+  try {  
+    const { name, email, password, confirmPassword, secretCode } = data;  
+
+    if (secretCode !== ADMIN_SECRET_CODE) {  
+      return { success: false, message: 'Invalid admin secret code' };  
+    }  
+
+    // Validate inputs using your signup schema  
+    const validationResult = adminSignUpSchema.safeParse({  
+      name,  
+      email,  
+      password,  
+      confirmPassword,  
+      secretCode,
     });  
 
     if (!validationResult.success) {  
