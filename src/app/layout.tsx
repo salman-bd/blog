@@ -11,8 +11,8 @@ import { getSettings } from "@/lib/actions/settings-actions"
 
 
 export const metadata: Metadata = {
-  title: "Junayed Ahmed | Personal Blog",
-  description: "Personal blog of Junayed Ahmed, sharing thoughts on travel, politics, religion, history, and nature.",
+  title: "Blogger | Personal Blog",
+  description: "Personal blog, sharing thoughts on travel, politics, religion, history, and nature.",
 }
 
 export default async function RootLayout({ children, }: { children: React.ReactNode }) {
