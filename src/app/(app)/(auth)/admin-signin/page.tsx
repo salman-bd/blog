@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Github, Loader2 } from "lucide-react"
+import { Eye, EyeOff, Github, Loader2 } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { SignInFormValues, signInSchema } from "@/lib/validations"
@@ -24,6 +24,7 @@ export default function SignInPage({ searchParams }: { searchParams: { callbackU
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
 
 
   const form = useForm<SignInFormValues>({
@@ -56,7 +57,7 @@ export default function SignInPage({ searchParams }: { searchParams: { callbackU
       } 
         toast({
           title: "Success",
-          description: "You have been signed in succussfully",
+          description: "You have been signed in succussfully!",
         })
         router.refresh()
         router.push(`${callbackUrl}`)
@@ -116,14 +117,25 @@ export default function SignInPage({ searchParams }: { searchParams: { callbackU
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="flex items-center justify-between">
-                      <FormLabel>Password</FormLabel>
-                      <Link href="/forgot-password" className="text-sm text-amber-600 hover:underline">
-                        Forgot password?
-                      </Link>
-                    </div>
+                    <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <div className="relative">
+                        <Input type={showPassword ? "text" : "password"} {...field} />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4 text-muted-foreground" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-muted-foreground" />
+                          )}
+                          <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
