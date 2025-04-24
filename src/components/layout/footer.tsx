@@ -79,7 +79,7 @@ export async function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             <p className="text-sm text-stone-600 dark:text-stone-400">
               &copy; {new Date().getFullYear()} Blogger. All rights reserved.
             </p>

@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        // remember: { label: "Remember", type: "boolean" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
@@ -53,12 +54,24 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           role: user.role,
           image: user.image,
+          isVerified: user.isVerified,
         } as User
       },
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account, profile, credentials }) {
+      // Handle the remember me option
+      if (credentials && "remember" in credentials) {
+        // console.log('Remember: ', credentials.remember);
+        
+        if (!credentials.remember) {
+          // If remember is false, set session to expire in 1 day instead of 30
+          authOptions.cookies!.sessionToken!.options.maxAge = 24 * 60 * 60 // 1 day
+        }
+      }
+
+      // Rest of your existing signIn callback
       // For OAuth providers
       if (account?.provider && ["google", "facebook"].includes(account.provider)) {
         try {
@@ -192,8 +205,8 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as string
         session.user.isVerified = token.isVerified as boolean
       }
-      console.log('User session: ', session);
-      
+      console.log("User session: ", session)
+
       return session
     },
   },
@@ -207,6 +220,18 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 30 * 24 * 60 * 60, // 30 days by default
+      },
+    },
   },
   debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,

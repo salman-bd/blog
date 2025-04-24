@@ -1,26 +1,25 @@
-import { getPosts } from "@/lib/actions/post-actions"
+import type { Metadata } from "next"
 import { BlogList } from "@/components/blog/blog-list"
 import { BlogSidebar } from "@/components/blog/blog-sidebar"
 import { getMockPosts } from "@/lib/mock-data"
-import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Blog | Junayed Ahmed",
-  description: "Read my latest thoughts and experiences on travel, politics, religion, history, and nature.",
-}
+import { getPosts } from "@/lib/actions/post-actions"
 
 interface BlogPageProps {
   searchParams: {
-    page?: string
     category?: string
     search?: string
+    page?: string
   }
 }
 
-export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const {  category, search } = await searchParams
-  const page = searchParams.page ? Number.parseInt(searchParams.page) : 1
+export const metadata: Metadata = {
+  title: "Blog - Acme Store",
+  description: "Read our latest blog posts about technology, design, and more.",
+}
 
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const { category, search, page: pageString } = await searchParams
+  const page = pageString ? Number.parseInt(pageString) : 1
 
   let posts = []
   let totalPages = 1

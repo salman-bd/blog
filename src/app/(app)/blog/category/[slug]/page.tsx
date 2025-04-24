@@ -1,57 +1,19 @@
-import { getPosts, getCategories } from "@/lib/actions/post-actions"
+import { notFound } from "next/navigation"
+import { getMockCategories, getMockPosts } from "@/lib/mock-data"
+import { getCategories } from "@/lib/actions/category-actions"
+import { getPosts } from "@/lib/actions/post-actions"
 import { BlogList } from "@/components/blog/blog-list"
 import { BlogSidebar } from "@/components/blog/blog-sidebar"
-import { getMockPosts, getMockCategories } from "@/lib/mock-data"
-import { notFound } from "next/navigation"
-import type { Metadata } from "next"
+
 
 interface CategoryPageProps {
-  params: {
-    slug: string
-  }
-  searchParams: {
-    page?: string
-  }
-}
-
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-  try {
-    const { slug } = await params
-    const categories = await getCategories()
-    const category = categories.find((cat) => cat.slug === slug)
-
-    if (!category) {
-      return {
-        title: "Category Not Found | Junayed Ahmed",
-        description: "The requested category could not be found.",
-      }
-    }
-
-    return {
-      title: `${category.name} | Junayed Ahmed's Blog`,
-      description: `Explore articles about ${category.name} on Junayed Ahmed's blog.`,
-    }
-  } catch (error) {
-    // Fallback to mock data
-    const categories = getMockCategories()
-    const category = categories.find((cat) => cat.slug === params.slug)
-
-    if (!category) {
-      return {
-        title: "Category Not Found | Junayed Ahmed",
-        description: "The requested category could not be found.",
-      }
-    }
-
-    return {
-      title: `${category.name} | Junayed Ahmed's Blog`,
-      description: `Explore articles about ${category.name} on Junayed Ahmed's blog.`,
-    }
-  }
+  params: { slug: string }
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
-  const page = searchParams.page ? Number.parseInt(searchParams.page) : 1
+  const { page: pageString } = await searchParams
+  const page = pageString ? Number.parseInt(pageString as string) : 1
   const { slug } = await params
 
   // First, check if the category exists

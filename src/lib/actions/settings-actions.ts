@@ -38,11 +38,6 @@ export type EmailSettingsValues = z.infer<typeof emailSettingsSchema>
 // Get settings
 export async function getSettings() {
   try {
-    const user = await getCurrentUser()
-
-    if (!user || user.role !== "ADMIN") {
-      return { success: false, message: "Unauthorized", settings: await getDefaultSettings() }
-    }
 
     // Fetch settings from the database
     const settings = await prisma.settings.findFirst()

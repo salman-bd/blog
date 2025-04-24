@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
@@ -13,19 +13,17 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Github, Loader2 } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { SignInFormValues, signInSchema } from "@/lib/validations"
+import { type SignInFormValues, signInSchema } from "@/lib/validations"
 import { useToast } from "@/components/ui/use-toast"
 
-
 export default function SignInPage({ searchParams }: { searchParams: { callbackUrl?: string } }) {
-  const callbackUrl = searchParams?.callbackUrl || '/'
+  const callbackUrl = searchParams?.callbackUrl || "/"
 
   const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
-
 
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
@@ -44,7 +42,8 @@ export default function SignInPage({ searchParams }: { searchParams: { callbackU
         email: values.email,
         password: values.password,
         redirect: false,
-        callback: callbackUrl
+        callbackUrl,
+        remember: values.remember,
       })
 
       if (result?.error) {
@@ -54,13 +53,13 @@ export default function SignInPage({ searchParams }: { searchParams: { callbackU
           variant: "destructive",
         })
         return
-      } 
-        toast({
-          title: "Success",
-          description: "You have been signed in succussfully!",
-        })
-        router.refresh()
-        router.push(`${callbackUrl}`)
+      }
+      toast({
+        title: "Success",
+        description: "You have been signed in succussfully!",
+      })
+      router.refresh()
+      router.push(`${callbackUrl}`)
     } catch (error) {
       toast({
         title: "Error",
@@ -86,7 +85,6 @@ export default function SignInPage({ searchParams }: { searchParams: { callbackU
       setSocialLoading(null)
     }
   }
-
 
   return (
     <Card className="w-full">
@@ -153,8 +151,12 @@ export default function SignInPage({ searchParams }: { searchParams: { callbackU
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white
-              " disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full bg-amber-600 hover:bg-amber-700 text-white
+              "
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
