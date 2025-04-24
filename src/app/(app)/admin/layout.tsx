@@ -9,6 +9,8 @@ export default async function AdminLayout({
   children: React.ReactNode
 }) {
   const user = await getCurrentUser()
+  console.log('User: ', user);
+  
 
   if (!user || user.role !== "ADMIN") {
     redirect("/admin-signin?callbackUrl=/admin")

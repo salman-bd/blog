@@ -8,8 +8,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader2, CheckCircle, XCircle } from "lucide-react"
 import { verifyEmail } from "@/lib/actions/auth-actions"
 
-export default function VerifyPage({ searchParams }: { searchParams: { token?: string } }) {
-  const token = searchParams.token
+export default function VerifyPage() {
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
+
+  console.log('Token for verification: ', token);
+  
+
   const [isLoading, setIsLoading] = useState(true)
   const [isVerified, setIsVerified] = useState(false)
   const [error, setError] = useState<string | null>(null)
