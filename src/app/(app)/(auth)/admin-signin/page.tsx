@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -18,12 +18,17 @@ import { useToast } from "@/components/ui/use-toast"
 
 export default function SignInPage({ searchParams }: { searchParams: { callbackUrl?: string } }) {
   const callbackUrl =  searchParams?.callbackUrl || "/"
-
   const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+
+  const { data: session } = useSession()
+  if (session?.user.role === 'ADMIN') {
+    router.push('/admin')
+  }
+
 
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
