@@ -2,7 +2,7 @@ import type { NextAuthOptions, User } from "next-auth"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
-import FacebookProvider from "next-auth/providers/facebook"
+import GitHubProvider from "next-auth/providers/github"
 import { compare } from "bcryptjs"
 import { prisma } from "@/lib/db"
 import { sendWelcomeEmail } from "@/lib/sendEmail"
@@ -14,9 +14,9 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID as string,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -73,7 +73,7 @@ export const authOptions: NextAuthOptions = {
 
       // Rest of your existing signIn callback
       // For OAuth providers
-      if (account?.provider && ["google", "facebook"].includes(account.provider)) {
+      if (account?.provider && ["google", "github"].includes(account.provider)) {
         try {
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email! },
@@ -154,7 +154,7 @@ export const authOptions: NextAuthOptions = {
       // Initial sign in
       if (account && user) {
         // For social logins, update the user with additional data
-        if (["google", "facebook"].includes(account.provider)) {
+        if (["google", "github"].includes(account.provider)) {
           try {
             // Find the user that was just created by the adapter
             const prismaUser = await prisma.user.findUnique({
