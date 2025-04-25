@@ -17,17 +17,9 @@ export const metadata: Metadata = {
 export default async function MyArticlesPage() {
   const user = await getCurrentUser()
 
-  if (!user) {
-    redirect("/signin")
-  }
-
-  if (user.role !== "ADMIN") {
-    redirect("/profile")
-  }
-
   // Get all posts by the current user
   const result = await getPosts()
-  const allPosts = result.posts.filter((post) => post.author.id === user.id)
+  const allPosts = result.posts.filter((post) => post.author.id === user?.id)
 
   // Separate published and draft posts
   const publishedPosts = allPosts.filter((post) => post.published)

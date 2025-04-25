@@ -15,12 +15,8 @@ export const metadata: Metadata = {
 export default async function ProfilePage() {
   const user = await getCurrentUser()
 
-  if (!user) {
-    redirect("/signin")
-  }
-
-  const userInitials = user.name
-    ? user.name
+  const userInitials = user?.name
+    ? user?.name
         .split(" ")
         .map((n) => n[0])
         .join("")
@@ -37,12 +33,12 @@ export default async function ProfilePage() {
         <Card>
           <CardHeader className="flex flex-row items-center gap-4">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={user.image || ""} alt={user.name || "User"} />
+              <AvatarImage src={user?.image || ""} alt={user?.name || "User"} />
               <AvatarFallback className="text-lg">{userInitials}</AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-2xl">{user.name}</CardTitle>
-              <CardDescription>{user.role}</CardDescription>
+              <CardTitle className="text-2xl">{user?.name}</CardTitle>
+              <CardDescription>{user?.role}</CardDescription>
             </div>
             {/* <Button variant="outline" size="sm" className="ml-auto">
               <Edit className="mr-2 h-4 w-4" />
@@ -53,17 +49,17 @@ export default async function ProfilePage() {
             <div className="grid gap-4">
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-muted-foreground" />
-                <span>{user.email}</span>
+                <span>{user?.email}</span>
               </div>
               {/* <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-muted-foreground" />
-                <span>Account created on {new Date(user.createdAt).toLocaleDateString()}</span>
+                <span>Account created on {new Date(user?.createdAt).toLocaleDateString()}</span>
               </div> */}
             </div>
           </CardContent>
         </Card>
 
-        {user.role === "ADMIN" && (
+        {user?.role === "ADMIN" && (
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
