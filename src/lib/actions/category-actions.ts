@@ -81,6 +81,7 @@ export async function createCategory(values: CategoryFormValues) {
 
     revalidatePath("/admin")
     revalidatePath("/blog")
+    revalidatePath("/")
 
     return { success: true, message: "Category created successfully", category }
   } catch (error) {
@@ -130,6 +131,8 @@ export async function updateCategory(categoryId: string, values: CategoryFormVal
 
     revalidatePath("/admin")
     revalidatePath("/blog")
+    revalidatePath("/")
+
 
     return { success: true, message: "Category updated successfully", category }
   } catch (error) {
@@ -172,6 +175,8 @@ export async function deleteCategory(categoryId: string) {
 
     revalidatePath("/admin")
     revalidatePath("/blog")
+    revalidatePath("/")
+
 
     return { success: true, message: "Category deleted successfully" }
   } catch (error) {

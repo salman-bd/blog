@@ -381,6 +381,8 @@ export async function createPost(values: PostFormValues) {
 
     revalidatePath("/blog")
     revalidatePath("/admin")
+    revalidatePath("/")
+    
 
     return { success: true, message: "Post created successfully", post }
   } catch (error) {
@@ -466,6 +468,8 @@ export async function updatePost(postId: string, values: PostFormValues) {
     revalidatePath("/blog")
     revalidatePath(`/blog/${slug}`)
     revalidatePath("/admin")
+    revalidatePath("/")
+    
 
     return { success: true, message: "Post updated successfully", post }
   } catch (error) {
@@ -493,6 +497,8 @@ export async function deletePost(postId: string) {
 
     revalidatePath("/blog")
     revalidatePath("/admin")
+    revalidatePath("/")
+
 
     return { success: true, message: "Post deleted successfully" }
   } catch (error) {
