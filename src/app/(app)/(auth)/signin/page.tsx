@@ -45,7 +45,6 @@ export default function SignInPage({ searchParams }: { searchParams: { callbackU
         email: values.email,
         password: values.password,
         redirect: false,
-        callback: callbackUrl,
         remember: values.remember
       })
 

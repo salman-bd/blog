@@ -84,7 +84,7 @@ export async function Footer() {
               &copy; {new Date().getFullYear()} Blogger. All rights reserved.
             </p>
             <p className="text-sm text-stone-600 dark:text-stone-400">
-              Developed by: <Link href={'/salmanbd.com'}><strong><span className="hover:text-stone-500">Md. Abu Salman</span></strong> </Link> 
+              Developed by: <Link href='https://www.salmanbd.com/' target="_blank"><strong><span className="hover:text-stone-500">Md. Abu Salman</span></strong> </Link> 
             </p>
           </div>
           <Link
