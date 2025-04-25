@@ -122,6 +122,112 @@ export async function getPosts(options: GetPostsOptions = {}): Promise<{ posts: 
   }
 }
 
+export async function getPostsForAuthors(options: GetPostsOptions = {}): Promise<{ posts: Post[]; totalPages: number }> {
+  try {
+    const user = await getCurrentUser()
+    const { page = 1, limit = 10, category, search, featured } = options
+
+    const skip = (page - 1) * limit
+
+    // Build the where clause based on options
+    const where: any = {
+      published: true,
+    }
+
+    if (user) {
+      where.authorId = user.id
+    }
+
+    if (featured !== undefined) {
+      where.featured = featured
+    }
+
+    if (category) {
+      where.categories = {
+        some: {
+          name: {
+            equals: category,
+            mode: "insensitive",
+          },
+        },
+      }
+    }
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { content: { contains: search, mode: "insensitive" } },
+      ]
+    }
+
+    // Get total count for pagination
+    const totalPosts = await prisma.post.count({ where })
+    const totalPages = Math.ceil(totalPosts / limit)
+
+    // Get posts with pagination
+    const posts = await prisma.post.findMany({
+      where,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        categories: {
+          select: {
+            name: true,
+          },
+        },
+        tags: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        publishedAt: "desc",
+      },
+      skip,
+      take: limit,
+    })
+
+    // Transform the data to match our types
+    const transformedPosts: Post[] = posts.map((post) => ({
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt || "",
+      content: post.content,
+      coverImage: post.coverImage || undefined,
+      publishedAt: post.publishedAt,
+      updatedAt: post.updatedAt,
+      published: post.published,
+      featured: post.featured,
+      readingTime: getReadingTime(post.content),
+      categories: post.categories.map((c) => c.name),
+      tags: post.tags.map((t) => t.name),
+      author: {
+        id: post.author.id,
+        name: post.author.name || "",
+        image: post.author.image || undefined,
+      },
+    }))
+
+    // console.log('Author posts: ', transformedPosts);
+    
+    return {
+      posts: transformedPosts,
+      totalPages,
+    }
+  } catch (error) {
+    console.error("Error fetching posts:", error)
+    // Return mock data as fallback
+    return getMockPosts(options)
+  }
+}
+
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
     const post = await prisma.post.findUnique({

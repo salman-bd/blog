@@ -1,47 +1,26 @@
-import { getCurrentUser } from "@/lib/auth"
-import { getPosts } from "@/lib/actions/post-actions"
+import {  getPostsForAuthors } from "@/lib/actions/post-actions"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Edit, Eye, Plus } from "lucide-react"
+import { Edit, Eye } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import type { Metadata } from "next"
+
 
 export const metadata: Metadata = {
   title: "My Articles | Blogger",
   description: "Manage your blog articles",
 }
 
-// Add this to explicitly mark the route as dynamic
-export const dynamic = "force-dynamic"
-
 export default async function MyArticlesPage() {
-  const user = await getCurrentUser()
-
-  // If no user is found, you might want to handle this case
-  if (!user) {
-    return (
-      <div className="container py-12 max-w-7xl mx-auto px-4 md:px-6">
-        <Card>
-          <CardContent className="py-8 text-center">
-            <p className="text-muted-foreground">You need to be signed in to view your articles.</p>
-            <Button className="mt-4" asChild>
-              <Link href="/signin">Sign In</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
 
   // Get all posts by the current user
-  const result = await getPosts()
-  const allPosts = result.posts.filter((post) => post.author.id === user?.id)
+  const { posts } = await getPostsForAuthors()
 
   // Separate published and draft posts
-  const publishedPosts = allPosts.filter((post) => post.published)
-  const draftPosts = allPosts.filter((post) => !post.published)
+  const publishedPosts = posts.filter((post) => post.published)
+  const draftPosts = posts.filter((post) => !post.published)
 
   return (
     <div className="container py-12 max-w-7xl mx-auto px-4 md:px-6">
@@ -49,12 +28,12 @@ export default async function MyArticlesPage() {
         <h1 className="text-3xl font-bold">
           <span className="text-amber-600">My</span> Articles
         </h1>
-        <Button asChild>
+        {/* <Button asChild>
           <Link href="/admin/posts/new">
             <Plus className="mr-2 h-4 w-4" />
             New Article
           </Link>
-        </Button>
+        </Button> */}
       </div>
 
       <div className="grid gap-8">
