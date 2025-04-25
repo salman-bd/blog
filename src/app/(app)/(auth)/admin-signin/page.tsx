@@ -17,7 +17,7 @@ import { type SignInFormValues, signInSchema } from "@/lib/validations"
 import { useToast } from "@/components/ui/use-toast"
 
 export default function SignInPage({ searchParams }: { searchParams: { callbackUrl?: string } }) {
-  const callbackUrl = searchParams?.callbackUrl || "/"
+  const callbackUrl =  searchParams?.callbackUrl || "/"
 
   const router = useRouter()
   const { toast } = useToast()
