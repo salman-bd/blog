@@ -13,7 +13,7 @@ export default async function AdminLayout({
   const user = await getCurrentUser()
   // console.log('User: ', user);
 
-  if (!user || user.role !== "ADMIN") {
+  if (user?.role !== "ADMIN") {
     redirect("/admin-signin?callbackUrl=/admin")
   }
 
