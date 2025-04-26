@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton"
 
-export default function ProfileLoading() {
+export function ProfileSkeleton() {
   return (
     <div className="container py-12 max-w-4xl mx-auto px-4 md:px-6">
       <Skeleton className="h-10 w-48 mb-8" />

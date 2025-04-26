@@ -1,4 +1,5 @@
-import {  getPostsForAuthors } from "@/lib/actions/post-actions"
+import { Suspense } from "react"
+import { getPostsForAuthors } from "@/lib/actions/post-actions"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -6,6 +7,7 @@ import { Edit, Eye } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import type { Metadata } from "next"
+import { ArticleCardSkeleton } from "@/components/ui/skeletons/admin/article-card-skeleton"
 
 
 export const metadata: Metadata = {
@@ -13,8 +15,45 @@ export const metadata: Metadata = {
   description: "Manage your blog articles",
 }
 
-export default async function MyArticlesPage() {
+export default function MyArticlesPage() {
+  return (
+    <Suspense fallback={<MyArticlesLoading />}>
+      <MyArticlesContent />
+    </Suspense>
+  )
+}
 
+function MyArticlesLoading() {
+  return (
+    <div className="container py-12 max-w-7xl mx-auto px-4 md:px-6">
+      <div className="flex items-center justify-between mb-8">
+        <Skeleton className="h-10 w-48" />
+      </div>
+
+      <div className="grid gap-8">
+        <div>
+          <Skeleton className="h-8 w-64 mb-4" />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <ArticleCardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <Skeleton className="h-8 w-64 mb-4" />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <ArticleCardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+async function MyArticlesContent() {
   // Get all posts by the current user
   const { posts } = await getPostsForAuthors()
 
@@ -28,12 +67,6 @@ export default async function MyArticlesPage() {
         <h1 className="text-3xl font-bold">
           <span className="text-amber-600">My</span> Articles
         </h1>
-        {/* <Button asChild>
-          <Link href="/admin/posts/new">
-            <Plus className="mr-2 h-4 w-4" />
-            New Article
-          </Link>
-        </Button> */}
       </div>
 
       <div className="grid gap-8">
@@ -154,4 +187,8 @@ export default async function MyArticlesPage() {
       </div>
     </div>
   )
+}
+
+function Skeleton({ className }: { className: string }) {
+  return <div className={`animate-pulse bg-muted ${className}`} />
 }

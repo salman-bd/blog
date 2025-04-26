@@ -1,11 +1,13 @@
+import { Suspense } from "react"
 import { getCurrentUser } from "@/lib/auth"
-import { redirect } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Edit, Mail, User } from "lucide-react"
+import { Mail } from "lucide-react"
 import Link from "next/link"
 import type { Metadata } from "next"
+import { ProfileSkeleton } from "@/components/ui/skeletons/admin/profile-skeleton"
+
 
 export const metadata: Metadata = {
   title: "Profile | Blogger",
@@ -13,6 +15,14 @@ export const metadata: Metadata = {
 }
 
 export default async function ProfilePage() {
+  return (
+    <Suspense fallback={<ProfileSkeleton />}>
+      <ProfileContent />
+    </Suspense>
+  )
+}
+
+async function ProfileContent() {
   const user = await getCurrentUser()
 
   const userInitials = user?.name
@@ -40,10 +50,6 @@ export default async function ProfilePage() {
               <CardTitle className="text-2xl">{user?.name}</CardTitle>
               <CardDescription>{user?.role}</CardDescription>
             </div>
-            {/* <Button variant="outline" size="sm" className="ml-auto">
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Profile
-            </Button> */}
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
@@ -51,10 +57,6 @@ export default async function ProfilePage() {
                 <Mail className="h-4 w-4 text-muted-foreground" />
                 <span>{user?.email}</span>
               </div>
-              {/* <div className="flex items-center gap-2">
-                <User className="h-4 w-4 text-muted-foreground" />
-                <span>Account created on {new Date(user?.createdAt).toLocaleDateString()}</span>
-              </div> */}
             </div>
           </CardContent>
         </Card>
