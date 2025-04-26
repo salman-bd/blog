@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { getPostBySlug, getRelatedPosts } from "@/lib/actions/post-actions"
 import { notFound } from "next/navigation"
 import Image from "next/image"
@@ -8,6 +9,7 @@ import type { Metadata } from "next"
 import { RelatedPosts } from "@/components/blog/related-posts"
 import { CommentSection } from "@/components/blog/comment-section"
 import { ShareButtons } from "@/components/blog/share-buttons"
+import { RelatedPostsSkeleton } from "@/components/ui/skeletons/blogs/related-posts-skeleton"
 
 interface BlogPostPageProps {
   params: {
@@ -46,8 +48,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   if (!post) {
     notFound()
   }
-
-  const relatedPosts = await getRelatedPosts(post.id, post.categories)
 
   return (
     <div className="container py-12 md:py-20 max-w-7xl mx-auto px-4 md:px-6">
@@ -124,10 +124,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </div>
 
-        <CommentSection postId={post.id} />
+        <Suspense
+          fallback={
+            <div className="h-40 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-amber-600"></div>
+            </div>
+          }
+        >
+          <CommentSection postId={post.id} />
+        </Suspense>
       </article>
 
-      <RelatedPosts posts={relatedPosts} />
+      <Suspense fallback={<RelatedPostsSkeleton />}>
+        <RelatedPostsWrapper postId={post.id} categories={post.categories} />
+      </Suspense>
     </div>
   )
+}
+
+async function RelatedPostsWrapper({ postId, categories }: { postId: string; categories: string[] }) {
+  const relatedPosts = await getRelatedPosts(postId, categories)
+  return <RelatedPosts posts={relatedPosts} />
 }

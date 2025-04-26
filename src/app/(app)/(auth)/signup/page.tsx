@@ -15,7 +15,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { signUp } from "@/lib/actions/auth-actions"
 
 
-export default function SignUpPage() {
+export default function SignUpPage({ searchParams }: { searchParams: { callbackUrl?: string }}) {
+  const callbackUrl = searchParams?.callbackUrl || '/'
+
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -37,7 +39,7 @@ export default function SignUpPage() {
   const onSubmit = async (data: SignUpFormValues) => {
     setIsLoading(true)
     try {
-      const result = await signUp(data, 'USER')
+      const result = await signUp(data, 'USER', callbackUrl)
       if (!result.success) {
         toast({
           title: "Registration failed",
@@ -203,7 +205,7 @@ export default function SignUpPage() {
         <CardFooter className="flex justify-center">
           <p className="text-sm text-[#8e8e8e]">
             Already have an account?{" "}
-            <Link href="/signin" className="text-[#fc8a06] hover:underline">
+            <Link href={`/signin?callbackUrl=${callbackUrl}`} className="text-[#fc8a06] hover:underline">
               Sign in
             </Link>
           </p>

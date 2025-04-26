@@ -8,7 +8,7 @@ import { UserRole } from "@prisma/client"
 
 const ADMIN_SECRET_CODE='ADMIN123'
 
-export async function signUp(data: SignUpFormValues, role: UserRole) {  
+export async function signUp(data: SignUpFormValues, role: UserRole, callbackUrl: string) {  
   try {  
     const { name, email, password, confirmPassword } = data;  
 
@@ -108,7 +108,7 @@ export async function signUp(data: SignUpFormValues, role: UserRole) {
       });  
     }  
     // Send verification email  
-    const emailResult = await sendVerificationEmail(email, verificationToken);  
+    const emailResult = await sendVerificationEmail(email, verificationToken, callbackUrl);  
     if (!emailResult.success) {  
       console.error("Failed to send verification email:", emailResult.error);  
       // Continue with registration even if email fails  

@@ -15,6 +15,7 @@ import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 import { useToast } from "../ui/use-toast"
 import { Comment } from "@/types/types"
+import { useParams } from "next/navigation"
 
 const formSchema = z.object({
   content: z.string().min(1, { message: "Comment cannot be empty" }).max(1000, { message: "Comment is too long" }),
@@ -26,6 +27,9 @@ interface CommentSectionProps {
 
 export function CommentSection({ postId }: CommentSectionProps) {
   const { data: session } = useSession()
+  const params = useParams()
+  const { slug } = params
+  const callbackUrl = `/blog/${slug}`
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [comments, setComments] = useState<Comment[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -163,11 +167,11 @@ export function CommentSection({ postId }: CommentSectionProps) {
         ) : (
           <div className="bg-stone-50 dark:bg-stone-800 p-4 rounded-md text-center">
             <p className="mb-2">You need to be logged in to comment.</p>
-            <Link href="/signin" className="text-amber-600 hover:underline">
+            <Link href={`/signin?callbackUrl=${callbackUrl}`} className="text-amber-600 hover:underline">
               Sign in
             </Link>
             {" or "}
-            <Link href="/signup" className="text-amber-600 hover:underline">
+            <Link href={`/signup?callbackUrl=${callbackUrl}`} className="text-amber-600 hover:underline">
               Create an account
             </Link>
           </div>

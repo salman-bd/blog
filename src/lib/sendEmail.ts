@@ -11,8 +11,8 @@ import ContactReplyEmail from "@/emails/contact-reply-email"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-export async function sendVerificationEmail(email: string, token: string) {
-  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}`
+export async function sendVerificationEmail(email: string, token: string, callbackUrl: string) {
+  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}&callbackUrl=${callbackUrl}`
 
   try {
     const { data, error } = await resend.emails.send({

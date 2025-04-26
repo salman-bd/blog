@@ -16,8 +16,9 @@ function ClientVerifyPage() {
   const { useSearchParams } = require("next/navigation")
   const searchParams = useSearchParams()
   const token = searchParams.get("token")
+  const callbackUrl = searchParams.get("callbackUrl")
 
-  console.log("Token for verification: ", token)
+  // console.log("Token for verification: ", token)
 
-  return <VerifyEmailContent token={token} />
+  return <VerifyEmailContent token={token} callbackUrl={callbackUrl}/>
 }

@@ -9,9 +9,10 @@ import { verifyEmail } from "@/lib/actions/auth-actions"
 
 interface VerifyEmailContentProps {
   token: string | null
+  callbackUrl: string
 }
 
-export function VerifyEmailContent({ token }: VerifyEmailContentProps) {
+export function VerifyEmailContent({ token, callbackUrl }: VerifyEmailContentProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [isVerified, setIsVerified] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -101,7 +102,7 @@ export function VerifyEmailContent({ token }: VerifyEmailContentProps) {
             </p>
           </CardContent>
           <CardFooter className="flex justify-center">
-            <Link href="/signin">
+            <Link href={`/signin?callbackUrl=${callbackUrl}`}>
               <Button className="bg-amber-600 hover:bg-amber-700">Sign In</Button>
             </Link>
           </CardFooter>

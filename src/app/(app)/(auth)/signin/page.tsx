@@ -207,7 +207,7 @@ export default function SignInPage({ searchParams }: { searchParams: { callbackU
       <CardFooter className="flex flex-col space-y-4">
         <div className="text-sm text-center">
           Don't have an account?{" "}
-          <Link href="/signup" className="text-amber-600 hover:underline">
+          <Link href={`/signup?callbackUrl=${callbackUrl}`} className="text-amber-600 hover:underline">
             Sign up
           </Link>
         </div>
