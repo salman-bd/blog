@@ -74,7 +74,7 @@ export function UserButton() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="admin/profile">
+            <Link href="/admin/profile">
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </Link>

@@ -70,7 +70,7 @@ async function ProfileContent() {
               </CardHeader>
               <CardContent>
                 <Button asChild>
-                  <Link href="admin/my-articles">View My Articles</Link>
+                  <Link href="/admin/my-articles">View My Articles</Link>
                 </Button>
               </CardContent>
             </Card>
