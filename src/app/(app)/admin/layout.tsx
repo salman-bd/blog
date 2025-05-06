@@ -1,19 +1,19 @@
+'use client'
+
 import type React from "react"
 import { redirect } from "next/navigation"
-import { getCurrentUser } from "@/lib/auth"
+import { useSession } from "next-auth/react"
 
-// Add this line to force dynamic rendering for all admin routes
-export const dynamic = "force-dynamic"
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const user = await getCurrentUser()
   // console.log('User: ', user);
-
-  if (user?.role !== "ADMIN") {
+  const { data: session} = useSession()
+ 
+  if (session?.user?.role !== "ADMIN") {
     redirect("/admin-signin?callbackUrl=/admin")
   }
 

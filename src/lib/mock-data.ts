@@ -99,7 +99,7 @@ export const mockPosts: Post[] = [
     title: "The History of Kishoregonj",
     slug: "history-of-kishoregonj",
     excerpt:
-      "Discover the rich history and cultural heritage of Kishoregonj, one of Bangladesh's most historically significant districts.",
+      "Discover the rich history and cultural heritage of Kishoregonj, one of Bangladesh's most historically significant districts. ",
     content: `
       <h2>Introduction to Kishoregonj</h2>
       <p>Kishoregonj, a district in the Dhaka division of Bangladesh, has a rich history that dates back centuries. As someone who was born in this region, I've always been fascinated by its historical significance and cultural heritage.</p>
